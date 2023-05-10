@@ -26,19 +26,29 @@ let perPage = 40;
 //   listEl.innerHTML = '';
 //   infoEl.innerHTML = '';
 // };
-const params = () =>
-  new URLParams({
-    key: APIkey,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
-    q: inputEl.value,
-    per_page: perPage,
-    page: page,
-  });
+// const params = () =>
+//   new URLParams({
+//     key: APIkey,
+//     image_type: 'photo',
+//     orientation: 'horizontal',
+//     safesearch: true,
+//     q: inputEl.value,
+//     per_page: perPage,
+//     page: page,
+//   });
 
 const apiSearch = async () => {
-  const response = await axios.get(API_URL + params());
+  const response = await axios.get(API_URL, {
+    params: {
+      key: APIkey,
+      image_type: 'photo',
+      orientation: 'horizontal',
+      safesearch: true,
+      q: inputEl.value,
+      per_page: pageShow,
+      page: page,
+    },
+  });
   console.log(response);
 
   return response;
