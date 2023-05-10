@@ -17,9 +17,9 @@ const showMoreBtn = document.querySelector('.show-more');
 showMoreBtn.style.visibility = 'hidden';
 
 let page = 1;
-let maxPages = 0;
+// let maxPages = 0;
 let perPage = 40;
-let inputSearch = '';
+// let inputSearch = '';
 // let lightbox = null;
 
 // const clearCard = () => {
@@ -32,44 +32,39 @@ const params = () =>
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
-    q: inputSearch,
+    q: inputEl.value,
     per_page: perPage,
     page: page,
   });
 
 const apiSearch = async () => {
-  try {
-    const response = await axios.get(API_URL + params());
-    console.log(response.data);
-    maxPages = Math.ceil(response.data.totalHits / perPage);
-    return response.data;
-  } catch (error) {
-    Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  }
+  const response = await axios.get(API_URL + params());
+  console.log(response);
+
+  return response;
 };
 const fetchPhotos = () => {
-  apiSearch.then(pictures => {
-    const totalHits = pictures.data.total;
+  apiSearch()
+    .then(pictures => {
+      const totalHits = pictures.data.total;
 
-    if (pictures.data.hits.length === 0) throw new Error('Nothing found');
+      if (pictures.data.hits.length === 0) throw new Error();
 
-    totalHits > 40
-      ? (showMoreBtn.style.visibility = 'visible')
-      : (showMoreBtn.style.visibility = 'hidden');
+      totalHits > 40
+        ? (showMoreBtn.style.visibility = 'visible')
+        : (showMoreBtn.style.visibility = 'hidden');
 
-    galleryEl.innerHTML = drawPhoto(pictures);
+      galleryEl.innerHTML = renderPhoto(pictures);
 
-    Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
+      Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
 
-    let lightbox = new SimpleLightbox('.gallery a');
-  });
-  // .catch(error => {
-  //   Notiflix.Notify.failure(
-  //     `Sorry, there are no images matching your search query. Please try again.`
-  //   );
-  // });
+      new SimpleLightbox('.gallery a');
+    })
+    .catch(error => {
+      Notiflix.Notify.failure(
+        `Sorry, there are no images matching your search query. Please try again.`
+      );
+    });
 };
 
 const fetchNewPhotos = () => {
@@ -82,7 +77,7 @@ const fetchNewPhotos = () => {
 
     galleryEl.insertAdjacentHTML('beforeend', renderPhoto(pictures));
 
-    lightbox = new SimpleLightbox('.photo-card a');
+    new SimpleLightbox('.gallery a');
 
     const { height: cardHeight } = document
       .querySelector('.gallery')
@@ -97,7 +92,7 @@ const fetchNewPhotos = () => {
 
 buttonEl.addEventListener('click', e => {
   e.preventDefault();
-  inputSearch = e.currentTarget.elements.searchQuery.value;
+  // inputSearch = e.currentTarget.elements.searchQuery.value;
   page = 1;
   fetchPhotos();
 });
