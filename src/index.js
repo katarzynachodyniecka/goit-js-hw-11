@@ -18,7 +18,7 @@ let perPage = 40;
 
 async function apiSearch() {
   try {
-    keyWord = inputEl.value.trim();
+    let keyWord = inputEl.value.trim();
     const response = await axios.get(
       `${API_URL}?key=${APIkey}&q=${keyWord}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`
     );
